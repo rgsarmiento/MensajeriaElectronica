@@ -1,0 +1,31 @@
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            {% if category == 'error' %}
+                <script>
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "{{message}}",
+                        icon: 'error',
+                        customClass: {
+                          confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                      });
+                </script>
+            {% else %}
+                <script>
+                    Swal.fire({
+                        title: '¡Buen trabajo!',
+                        text: "{{message}}",
+                        icon: 'success',
+                        customClass: {
+                          confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                      });
+                </script>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endwith  %}
