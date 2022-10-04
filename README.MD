@@ -1,3 +1,6 @@
+# pegar la base de datos
+    el archivo quickly.db se debe ubicar en la carpeta my_app
+    
 # Crear el entorno virtual
     py -m venv env
     
