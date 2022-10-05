@@ -9,11 +9,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Importar SQLAlchemy del archivo __init__.py
 from my_app import db
 # Importar los modelos
-from my_app.models.user import User
+from my_app.models.auth.user import User
 
 # Importar los formularios
-from my_app.forms.register import RegisterForm
-from my_app.forms.login import LoginForm
+from my_app.forms.auth.register import RegisterForm
+from my_app.forms.auth.login import LoginForm
 
 
 auth = Blueprint('auth', __name__, url_prefix= '/auth')

@@ -10,8 +10,11 @@ app.config.from_object('config.DevelopmenConfig')
 db = SQLAlchemy(app)
 
 #importar vistas
-from my_app.views.auth import auth
+from my_app.views.auth.auth import auth
+from my_app.views.inbox.inbox import inbox
+
 app.register_blueprint(auth)
+app.register_blueprint(inbox)
 
 
 #ejecutar todos los querys
