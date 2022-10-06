@@ -1,4 +1,6 @@
 import functools
+# Importacion para ejecutar funciones de forma asíncrona
+import threading
 from flask import(
     render_template as render, Blueprint, flash, g, redirect, request, session, url_for
 )
@@ -50,7 +52,8 @@ def register():
             id_bytes = str(id).encode('ascii')
             id_base64_bytes = base64.b64encode(id_bytes)
             id_base64 = id_base64_bytes.decode('ascii') 
-            send_email("Activar cuenta Quickly", user, id_base64)
+            threading_emails = threading.Thread(target=send_email, args=("Activar cuenta Quickly", user, id_base64))
+            threading_emails.start()
             return render('auth/verify_email.html', email=email)
         flash(error, 'error')
         return render('auth/register.html', form=form)
