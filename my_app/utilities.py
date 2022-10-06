@@ -11,7 +11,7 @@ def send_email(subject, user, id):
     sender_email_address = "rgsarmiento@uninorte.edu.co" 
     receiver_email_address = user.email 
     email_smtp = "smtp-mail.outlook.com" 
-    email_password = "89112652044Rg" 
+    email_password = "acaelpassword" 
 
     # Crear un objeto de mensaje de correo electrónico 
     message = EmailMessage() 
