@@ -7,10 +7,12 @@ from my_app.models.auth.user import User
 
 # Importar SQLAlchemy del archivo __init__.py
 from my_app import db
+from my_app.views.auth.auth import login_required
 
 inbox = Blueprint('inbox', __name__)
 
 @inbox.route("/")
+@login_required
 def index():
     user = User.get_by_id(1)
     avatar_name = user.user_name[0:2].upper()

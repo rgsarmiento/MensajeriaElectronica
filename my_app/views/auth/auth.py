@@ -6,8 +6,11 @@ from flask import(
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from my_app.utilities import send_email
+
 # Importar SQLAlchemy del archivo __init__.py
 from my_app import db
+
 # Importar los modelos
 from my_app.models.auth.user import User
 
@@ -47,7 +50,7 @@ def register():
             id_bytes = str(id).encode('ascii')
             id_base64_bytes = base64.b64encode(id_bytes)
             id_base64 = id_base64_bytes.decode('ascii') 
-
+            send_email("Activar cuenta Quickly", user, id_base64)
             return render('auth/verify_email.html', email=email)
         flash(error, 'error')
         return render('auth/register.html', form=form)
@@ -73,7 +76,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = user.id
-            #return redirect(url_for('index'))
+            return redirect(url_for('inbox.index'))
         flash(error, 'error')
         return render('auth/login.html', form=form)
     else:        
@@ -93,7 +96,7 @@ def activate_account():
         if user is not None:
             user.active = True
             db.session.commit()
-            return redirect(url_for('auth,login'))               
+            return redirect(url_for('auth.login'))               
         else:
             return redirect('/not_found')
     else:
@@ -118,7 +121,7 @@ def load_logged_in_user():
 @auth.route('/logout')
 def logout():
     session.clear()
-    return redirect(url_for('blog.index'))
+    return redirect(url_for('auth.login'))
 
 # Para restringir las vistas q necesiten de inicio de session
 def login_required(view):
