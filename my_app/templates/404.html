@@ -58,7 +58,7 @@
                     <div class="misc-inner p-2 p-sm-3">
                         <div class="w-100 text-center">
                             <h2 class="mb-1">Página no encontrada 🕵🏻‍♀️</h2>
-                            <p class="mb-2">¡Ups! 😖 La URL solicitada no se encontró en este servidor.</p><a class="btn btn-primary mb-2 btn-sm-block" href="index.html">Volver al inicio</a><img class="img-fluid" src="{{ url_for('static', filename='images/pages/error-dark.svg') }}" alt="Error page" />
+                            <p class="mb-2">¡Ups! 😖 La URL solicitada no se encontró en este servidor.</p><a class="btn btn-primary mb-2 btn-sm-block" href="{{url_for('inbox.index')}}">Volver al inicio</a><img class="img-fluid" src="{{ url_for('static', filename='images/pages/error-dark.svg') }}" alt="Error page" />
                         </div>
                     </div>
                 </div>

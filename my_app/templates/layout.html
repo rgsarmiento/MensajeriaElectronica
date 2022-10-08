@@ -32,6 +32,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css2?family=Inconsolata&amp;family=Roboto+Slab&amp;family=Slabo+27px&amp;family=Sofia&amp;family=Ubuntu+Mono&amp;display=swap">
+        <!-- sweet-alerts-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='vendors/css/extensions/sweetalert2.min.css') }}">
+    
     <!-- END: Vendor CSS-->
 
     <!-- BEGIN: Theme CSS-->
@@ -51,6 +54,9 @@
     <link rel="stylesheet" type="text/css"
         href="{{ url_for('static', filename='css/plugins/extensions/ext-component-toastr.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/pages/app-email.css') }}">
+    <!-- sweet-alerts-->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/plugins/extensions/ext-component-sweet-alerts.css') }}">
+    
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Custom CSS-->
@@ -96,107 +102,46 @@
                             data-feather="sun"></i></a></li>
 
                 <li class="nav-item dropdown dropdown-notification me-25"><a class="nav-link" href="#"
-                        data-bs-toggle="dropdown"><i class="ficon" data-feather="bell"></i><span
-                            class="badge rounded-pill bg-danger badge-up">5</span></a>
-                    <ul class="dropdown-menu dropdown-menu-media dropdown-menu-end">
-                        <li class="dropdown-menu-header">
-                            <div class="dropdown-header d-flex">
-                                <h4 class="notification-title mb-0 me-auto">Notifications</h4>
-                                <div class="badge rounded-pill badge-light-primary">6 New</div>
-                            </div>
-                        </li>
-                        <li class="scrollable-container media-list"><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar"><img
-                                                src="{{ url_for('static', filename='images/portrait/small/avatar-s-15.jpg') }}"
-                                                alt="avatar" width="32" height="32"></div>
-                                    </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">Congratulation Sam
-                                                🎉</span>winner!</p><small class="notification-text"> Won the monthly
-                                            best seller badge.</small>
-                                    </div>
+                        data-bs-toggle="dropdown"><i class="ficon" data-feather="bell"></i>
+                        {% if received_messages_new %}
+                        <span class="badge rounded-pill bg-danger badge-up">{{received_messages_new|length}}</span></a>
+                       
+                        <ul class="dropdown-menu dropdown-menu-media dropdown-menu-end">
+                            <li class="dropdown-menu-header">
+                                <div class="dropdown-header d-flex">
+                                    <h4 class="notification-title mb-0 me-auto">Notificaciones</h4>
+                                    <div class="badge rounded-pill badge-light-primary">{{received_messages_new|length}} Nuevos</div>
                                 </div>
-                            </a><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar"><img
-                                                src="{{ url_for('static', filename='images/portrait/small/avatar-s-3.jpg') }}"
-                                                alt="avatar" width="32" height="32"></div>
-                                    </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">New
-                                                message</span>&nbsp;received</p><small class="notification-text"> You
-                                            have 10 unread messages</small>
-                                    </div>
-                                </div>
-                            </a><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar bg-light-danger">
-                                            <div class="avatar-content">MD</div>
-                                        </div>
-                                    </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">Revised Order
-                                                👋</span>&nbsp;checkout</p><small class="notification-text"> MD Inc.
-                                            order updated</small>
-                                    </div>
-                                </div>
-                            </a>
-                            <div class="list-item d-flex align-items-center">
-                                <h6 class="fw-bolder me-auto mb-0">System Notifications</h6>
-                                <div class="form-check form-check-primary form-switch">
-                                    <input class="form-check-input" id="systemNotification" type="checkbox" checked="">
-                                    <label class="form-check-label" for="systemNotification"></label>
-                                </div>
-                            </div><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar bg-light-danger">
-                                            <div class="avatar-content"><i class="avatar-icon" data-feather="x"></i>
+                            </li>
+                            <li class="scrollable-container media-list">
+
+                                {% for item in received_messages_new %}
+                                                                
+                                <a class="d-flex" href="#">
+                                    <div class="list-item d-flex align-items-start">
+                                        <div class="me-1">
+                                            <div class="avatar bg-light-danger">
+                                                <div class="avatar-content">{{user_get_by_id(item.user_id_from).user_name[0:2].upper()}}</div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">Server
-                                                down</span>&nbsp;registered</p><small class="notification-text"> USA
-                                            Server is down due to hight CPU usage</small>
-                                    </div>
-                                </div>
-                            </a><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar bg-light-success">
-                                            <div class="avatar-content"><i class="avatar-icon" data-feather="check"></i>
-                                            </div>
+                                        <div class="list-item-body flex-grow-1">
+                                            <p class="media-heading"><span class="fw-bolder">{{user_get_by_id(item.user_id_from).user_name}}
+                                                    👋</span></p><small class="notification-text">{{item.subject}}</small>
                                         </div>
                                     </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">Sales
-                                                report</span>&nbsp;generated</p><small class="notification-text"> Last
-                                            month sales report generated</small>
-                                    </div>
-                                </div>
-                            </a><a class="d-flex" href="#">
-                                <div class="list-item d-flex align-items-start">
-                                    <div class="me-1">
-                                        <div class="avatar bg-light-warning">
-                                            <div class="avatar-content"><i class="avatar-icon"
-                                                    data-feather="alert-triangle"></i></div>
-                                        </div>
-                                    </div>
-                                    <div class="list-item-body flex-grow-1">
-                                        <p class="media-heading"><span class="fw-bolder">High memory</span>&nbsp;usage
-                                        </p><small class="notification-text"> BLR Server using high memory</small>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="dropdown-menu-footer"><a class="btn btn-primary w-100" href="#">Read all
-                                notifications</a></li>
-                    </ul>
+                                </a>                               
+                                
+                                {% endfor %}
+
+                                
+                                
+                            </li>
+                          
+                        </ul>
+                       
+                        {% endif %}
+                        
+                    
                 </li>
                 <li class="nav-item dropdown dropdown-user"><a class="nav-link dropdown-toggle dropdown-user-link"
                         id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -339,10 +284,7 @@
 
     <!-- BEGIN: Footer-->
     <footer class="footer footer-static footer-light footer-shadow">
-        <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">COPYRIGHT &copy; 2021<a
-                    class="ms-25" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a><span
-                    class="d-none d-sm-inline-block">, All rights Reserved</span></span><span
-                class="float-md-end d-none d-md-block">Hand-crafted & Made with<i data-feather="heart"></i></span></p>
+        <p class="clearfix mb-0"><span class="float-md-start d-block d-md-inline-block mt-25">Equipo1 </p>
     </footer>
     <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
     <!-- END: Footer-->
@@ -359,6 +301,9 @@
     <script src="{{ url_for('static', filename='vendors/js/editors/quill/quill.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendors/js/extensions/toastr.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendors/js/forms/select/select2.full.min.js') }}"></script>
+    <!-- sweet-alerts-->
+    <script src="{{ url_for('static', filename='vendors/js/extensions/sweetalert2.all.min.js') }}"></script>
+    
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -370,6 +315,9 @@
     <script src="{{ url_for('static', filename='js/scripts/pages/app-email.js') }}"></script>
     <!-- END: Page JS-->
 
+    {% block scripts %}{% endblock %}
+
+    {% include "sweetalerts.html" %}
     <script>
         $(window).on('load', function () {
             if (feather) {

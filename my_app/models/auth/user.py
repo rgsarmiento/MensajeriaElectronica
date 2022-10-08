@@ -29,3 +29,7 @@ class User(db.Model):
     @staticmethod
     def get_by_email(email_):
         return User.query.filter(User.email == email_).first()
+    
+    @staticmethod
+    def get_all_except_me(id):
+        return User.query.filter(User.id != id).order_by(User.user_name).all()
