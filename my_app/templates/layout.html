@@ -129,11 +129,9 @@
                                                     👋</span></p><small class="notification-text">{{item.subject}}</small>
                                         </div>
                                     </div>
-                                </a>                               
+                                </a>                              
                                 
-                                {% endfor %}
-
-                                
+                                {% endfor %}                                
                                 
                             </li>
                           
@@ -153,9 +151,9 @@
                                     <span class="avatar-status-online"></span>
                                 </div>         
                     </a>
-                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user"><a
-                            class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="me-50"
-                                data-feather="power"></i> Logout</a>
+                    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdown-user">
+                        <a class="dropdown-item" href="{{ url_for('auth.reset_password') }}"><i class="me-50" data-feather="lock"></i> Contraseña</a>
+                        <a class="dropdown-item" href="{{ url_for('auth.logout') }}"><i class="me-50" data-feather="power"></i> Logout</a>
                     </div>
                 </li>
             </ul>

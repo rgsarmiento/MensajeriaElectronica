@@ -6,13 +6,13 @@ def read_file(path):
         return _file.read()
 
 
-def send_email(subject, user, id):
+def send_email(subject, user, id, type):
     try:
         email_subject = subject 
         sender_email_address = "xxxxxx@uninorte.edu.co" 
         receiver_email_address = user.email 
         email_smtp = "smtp-mail.outlook.com" 
-        email_password = "xxxxxx" 
+        email_password = "xxxxxxxxxxxx" 
 
         # Crear un objeto de mensaje de correo electrónico 
         message = EmailMessage() 
@@ -22,9 +22,14 @@ def send_email(subject, user, id):
         message['From'] = sender_email_address 
         message['To'] = receiver_email_address 
 
-        file_content = read_file("my_app/templates/notification_email.html")
+        if type == 'recover_password':
+            file_content = read_file("my_app/templates/notification_email_password.html")
+            file_content = file_content.replace('@url', "http://127.0.0.1:5000/auth/reset_password?userId="+ id)
+        else:
+            file_content = read_file("my_app/templates/notification_email.html")
+            file_content = file_content.replace('@url', "http://127.0.0.1:5000/auth/activate_account?userId="+ id)
         file_content = file_content.replace('@user_name', user.user_name)
-        file_content = file_content.replace('@url', "http://127.0.0.1:5000/auth/activate_account?userId="+ id)
+        
 
         # Establecer el texto del cuerpo del correo electrónico
         message.set_content(file_content, subtype='html')

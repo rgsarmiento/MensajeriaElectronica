@@ -1,3 +1,4 @@
+import email
 import functools
 # Importacion para ejecutar funciones de forma asíncrona
 import threading
@@ -19,6 +20,8 @@ from my_app.models.auth.user import User
 # Importar los formularios
 from my_app.forms.auth.register import RegisterForm
 from my_app.forms.auth.login import LoginForm
+from my_app.forms.auth.recover_password import RecoverPasswordForm
+from my_app.forms.auth.reset_password import ResetPasswordForm
 
 
 auth = Blueprint('auth', __name__, url_prefix= '/auth')
@@ -53,7 +56,7 @@ def register():
             id_bytes = str(id).encode('ascii')
             id_base64_bytes = base64.b64encode(id_bytes)
             id_base64 = id_base64_bytes.decode('ascii') 
-            threading_emails = threading.Thread(target=send_email, args=("Activar cuenta Quickly", user, id_base64))
+            threading_emails = threading.Thread(target=send_email, args=("Activar cuenta Quickly", user, id_base64, 'activate_account'))
             threading_emails.start()
             return render('auth/verify_email.html', titulo=titulo, email=email)
         flash(error, 'error')
@@ -63,7 +66,7 @@ def register():
 
 # Iniciar Session
 @auth.route('/login', methods=["GET", "POST"])
-def login():
+def login():    
     form = LoginForm()
     titulo = "Iniciar sesion - Quickly"
     if request.method == 'POST' and form.validate():
@@ -84,7 +87,7 @@ def login():
             return redirect(url_for('inbox.index'))
         flash(error, 'error')
         return render('auth/login.html', titulo=titulo, form=form)
-    else:        
+    else:            
         return render('auth/login.html', titulo=titulo, form=form)
 
 
@@ -106,6 +109,70 @@ def activate_account():
             return redirect('/not_found')
     else:
         return redirect('/not_found')
+
+
+# Recuperar contraseña
+@auth.route('/recover_password', methods=["GET", "POST"])
+def recover_password():    
+    form = RecoverPasswordForm()
+    email = form.email.data
+    if request.method == 'POST' and form.validate():
+        email = form.email.data
+        user = User.get_by_email_or_user_name(email, '')
+        if user is not None:
+            id = user.id
+            id_bytes = str(id).encode('ascii')
+            id_base64_bytes = base64.b64encode(id_bytes)
+            id_base64 = id_base64_bytes.decode('ascii') 
+            threading_emails = threading.Thread(target=send_email, args=("Restablecer contraseña de la cuenta Quickly", user, id_base64, 'recover_password'))
+            threading_emails.start()
+            flash(f"Hemos enviado un enlace a su dirección de correo electrónico: {email}, siga el enlace que se encuentra dentro para restablecer su contraseña de Quickly.")            
+        else:
+            flash(f"El correo {email} no existe", 'error')    
+            
+    titulo="Restablecer contraseña - Quickly"        
+    return render('auth/recover_password.html', titulo=titulo, form=form)
+
+
+
+# Cambiar contraseña
+@auth.route('/reset_password', methods=["GET", "POST"])
+def reset_password():    
+    parametro = request.args.get('userId')
+    form = ResetPasswordForm()
+    titulo="Cambiar contraseña - Quickly"
+    print(parametro)
+    if request.method == 'POST' and form.validate(): 
+        password = form.password.data
+          
+        if parametro:
+            id_base64_bytes = parametro.encode('ascii')
+            id_bytes = base64.b64decode(id_base64_bytes)
+            id_user = id_bytes.decode('ascii')
+            print(id_user)
+            user = User.get_by_id(id_user)
+
+            if user is not None:                
+                user.password = generate_password_hash(password)
+                db.session.commit()
+                flash(f"La contraseña se restablecio correctamente")
+                return redirect(url_for('auth.login'))
+            else:
+                flash(f"Error de autenticacion 160", 'error')        
+        else:
+            if g.user is None:
+                flash(f"Error de autenticacion", 'error')                
+            else:
+                user = User.get_by_id(g.user.id)
+                user.password = generate_password_hash(password)
+                db.session.commit()
+                session.clear()
+                flash(f"La contraseña se restablecio correctamente")
+                return redirect(url_for('auth.login'))
+            
+    return render('auth/reset_password.html', titulo=titulo, form=form)
+
+
 
 
 # Verificar usuario logueado

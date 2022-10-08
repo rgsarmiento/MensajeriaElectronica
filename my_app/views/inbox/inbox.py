@@ -1,4 +1,3 @@
-from email import message
 from flask import(
     render_template as render, Blueprint, flash, g, redirect, request, url_for
 )
@@ -8,7 +7,6 @@ from my_app.models.auth.user import User
 from my_app.models.inbox.message import Message
 
 # Importar formularios
-
 from my_app.forms.inbox.message import MessageForm
 
 # Importar SQLAlchemy del archivo __init__.py
@@ -48,6 +46,8 @@ def index():
     titulo = "Bandeja de mensajes - Quickly"
     return render("inbox/index.html", titulo=titulo, to_html=Message.to_html, user_get_by_id=User.get_by_id, avatar_name=avatar_name, received_messages=received_messages, sent_messages=sent_messages, received_messages_new=received_messages_new, form=form)
 
+
+# Actualizar estado de los mensajes
 @inbox.route("/update")
 @login_required
 def update():
@@ -59,4 +59,6 @@ def update():
             db.session.commit()
             return redirect(url_for('inbox.index'))            
         
+
+
 
