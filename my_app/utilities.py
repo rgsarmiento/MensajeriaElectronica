@@ -9,10 +9,10 @@ def read_file(path):
 def send_email(subject, user, id):
     try:
         email_subject = subject 
-        sender_email_address = "rgsarmiento@uninorte.edu.co" 
+        sender_email_address = "xxxxxx@uninorte.edu.co" 
         receiver_email_address = user.email 
         email_smtp = "smtp-mail.outlook.com" 
-        email_password = "89112652044Rg" 
+        email_password = "xxxxxx" 
 
         # Crear un objeto de mensaje de correo electrónico 
         message = EmailMessage() 

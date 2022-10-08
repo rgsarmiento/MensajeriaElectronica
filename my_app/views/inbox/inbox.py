@@ -45,8 +45,8 @@ def index():
     received_messages_new =Message.get_all_received_new(g.user.id)    
     sent_messages = Message.get_all_sent(g.user.id)
     received_messages = Message.get_all_received(g.user.id)
-
-    return render("inbox/index.html", to_html=Message.to_html, user_get_by_id=User.get_by_id, avatar_name=avatar_name, received_messages=received_messages, sent_messages=sent_messages, received_messages_new=received_messages_new, form=form)
+    titulo = "Bandeja de mensajes - Quickly"
+    return render("inbox/index.html", titulo=titulo, to_html=Message.to_html, user_get_by_id=User.get_by_id, avatar_name=avatar_name, received_messages=received_messages, sent_messages=sent_messages, received_messages_new=received_messages_new, form=form)
 
 @inbox.route("/update")
 @login_required

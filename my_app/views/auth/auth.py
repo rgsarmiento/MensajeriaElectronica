@@ -28,14 +28,15 @@ auth = Blueprint('auth', __name__, url_prefix= '/auth')
 def register():
     # se cargar el formulario
     form = RegisterForm(request.form)
-    error = None  
+    error = None
+    titulo = "Registrar - Quickly"  
     # si se accede por el metodo post y si no contiene errores 
     if request.method == 'POST' and form.validate():
         # se cargan los datos enviados desde el html
         user_name = form.user_name.data
         email = form.email.data
         password = form.password.data
-        
+        titulo = "Verificar correo - Quickly"
         # buscamos q no exista un usuario con el mismo nombre y/o email
         user = User.get_by_email_or_user_name(email, user_name)
         if user is not None:
@@ -54,16 +55,17 @@ def register():
             id_base64 = id_base64_bytes.decode('ascii') 
             threading_emails = threading.Thread(target=send_email, args=("Activar cuenta Quickly", user, id_base64))
             threading_emails.start()
-            return render('auth/verify_email.html', email=email)
+            return render('auth/verify_email.html', titulo=titulo, email=email)
         flash(error, 'error')
-        return render('auth/register.html', form=form)
+        return render('auth/register.html', titulo=titulo, form=form)
     else:
-        return render('auth/register.html', form=form)
+        return render('auth/register.html', titulo=titulo, form=form)
 
 # Iniciar Session
 @auth.route('/login', methods=["GET", "POST"])
 def login():
     form = LoginForm()
+    titulo = "Iniciar sesion - Quickly"
     if request.method == 'POST' and form.validate():
         email = form.email.data
         password = form.password.data
@@ -81,15 +83,15 @@ def login():
             session['user_id'] = user.id
             return redirect(url_for('inbox.index'))
         flash(error, 'error')
-        return render('auth/login.html', form=form)
+        return render('auth/login.html', titulo=titulo, form=form)
     else:        
-        return render('auth/login.html', form=form)
+        return render('auth/login.html', titulo=titulo, form=form)
 
 
 # Activar Cuenta
 @auth.route('/activate_account')
 def activate_account():        
-    parametro = request.args.get('userId')
+    parametro = request.args.get('userId')    
     if parametro:
         id_base64_bytes = parametro.encode('ascii')
         id_bytes = base64.b64decode(id_base64_bytes)

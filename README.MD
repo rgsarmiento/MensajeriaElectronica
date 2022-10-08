@@ -10,6 +10,10 @@
 # instalas los paquetes requeridos
     pip install -r requirements.txt
 
+# Configurar correo de envio
+    Modificar el archivo utilities.py
+    -Linea 12 y 15 con sus datos del correo
+
 # iniciar la app
     python main.py
 
